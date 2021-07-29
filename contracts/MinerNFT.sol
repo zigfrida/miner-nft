@@ -12,14 +12,17 @@ contract MinerNFT is ERC721, Ownable {
     bytes32 internal keyHash;
     uint256 internal fee;
 
+    bytes3[] public colors;
+    mapping(bytes3 => bool) private _colorExists;
+
     uint256 public tokenCounter;
 
-    struct MinerNFT {
+    struct Miner {
         string MAC_hash;
         string Id;
     }
 
-    MinerNFT[] public miners;
+    Miner[] public miners;
 
     constructor(address _VRFCoordinator, address _LinkToken, bytes32 _keyhash) ERC721("MinerNFT", "MNFT") public {
         VRFCoordinator = _VRFCoordinator;
@@ -28,14 +31,33 @@ contract MinerNFT is ERC721, Ownable {
         fee = 0.1 * 10**18; // 0.1 LINK
     }
 
-    function newMiner(address recipient, string memory hash, string memory metadata) public returns (uint256) {
+    function newMiner(string memory metadata) public returns (uint256) {
+        //require(msg.sender, owner());
         uint256 newMinerId = tokenCounter;
-        _mint(recipient, newMinerId);
+        _mint(msg.sender, newMinerId);
         _setTokenURI(newMinerId, metadata);
         tokenCounter = tokenCounter + 1;
         return newMinerId;
     }
 
+    function mint(bytes3 _color) public {
+        // require(!_colorExists[_color], "color exists");
+        // colors.push(_color);
+        // uint256 newMinerId = tokenCounter;
+        // _mint(msg.sender, newMinerId);
+        // tokenCounter = tokenCounter + 1;
+        // _colorExists[_color] = true;
+
+        require(!_colorExists[_color], "color exists");
+        colors.push(_color);
+        uint _id = colors.length - 1;
+        _mint(msg.sender, _id);
+        _colorExists[_color] = true;
+    }
+
+    function getNumberOfMiners() public view returns (uint256) {
+        return miners.length;
+    }
 
     function getTokenURI(uint256 tokenId) public view returns (string memory) {
         return tokenURI(tokenId);

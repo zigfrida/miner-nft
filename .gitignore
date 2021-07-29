@@ -105,3 +105,4 @@ dist
 
 .secret
 app/src/contracts
+app/node_modules

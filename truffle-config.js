@@ -1,10 +1,11 @@
 const HDWalletProvider = require('@truffle/hdwallet-provider');
+require('dotenv').config()
 
-const fs = require('fs');
-const mnemonic = fs.readFileSync(".secret").toString().trim();
-if (!mnemonic || mnemonic.split(' ').length !== 12) {
-	throw new Error('unable to retrieve mnemonic from .secret');
-}
+// const fs = require('fs');
+// const mnemonic = fs.readFileSync(".secret").toString().trim();
+// if (!mnemonic || mnemonic.split(' ').length !== 12) {
+// 	throw new Error('unable to retrieve mnemonic from .secret');
+// }
 
 // const gasPriceTestnetRaw = fs.readFileSync(".gas-price-testnet.json").toString().trim();
 // const gasPriceTestnet = parseInt(JSON.parse(gasPriceTestnetRaw).result, 16);
@@ -18,11 +19,11 @@ const path = require("path");
 module.exports = {
 	networks: {
 		testnet: {
-			provider: () => new HDWalletProvider(test, 'https://rinkeby.infura.io/v3/6cefd59b7231462dbf09ddb3fd2ab802'),
+			provider: () => new HDWalletProvider(process.env.MNEMONIC, process.env.RINKEBY_RPC_URL),
 			network_id: '4'
 		},
 		rinkeby: {
-			provider: () => new HDWalletProvider(mnemonic, 'https://rinkeby.infura.io/v3/6cefd59b7231462dbf09ddb3fd2ab802'),
+			provider: () => new HDWalletProvider(process.env.MNEMONIC, process.env.RINKEBY_RPC_URL),
 			network_id: '4',
 			networkCheckTimeout: 10000000,
 		},
